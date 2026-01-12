@@ -65,6 +65,19 @@ class Hitbox:
     left: Pin
     right: Pin
 
+    l1: Pin
+    r1: Pin
+
+    p1: Pin
+    p2: Pin
+    p3: Pin
+    p4: Pin
+
+    k1: Pin
+    k2: Pin
+    k3: Pin
+    k4: Pin
+
     gamepad: Xbox360Interface
     direction: list[int]
     keymgr: KeyMgr
@@ -72,10 +85,24 @@ class Hitbox:
     def __init__(self) -> None:
         BoardLED.on(0, 255, 0)
 
-        self.up = Pin(2, Pin.IN, Pin.PULL_UP)
-        self.down = Pin(3, Pin.IN, Pin.PULL_UP)
-        self.left = Pin(4, Pin.IN, Pin.PULL_UP)
-        self.right = Pin(5, Pin.IN, Pin.PULL_UP)
+        self.up = Pin(28, Pin.IN, Pin.PULL_UP)
+        self.down = Pin(26, Pin.IN, Pin.PULL_UP)
+        self.left = Pin(27, Pin.IN, Pin.PULL_UP)
+        self.right = Pin(15, Pin.IN, Pin.PULL_UP)
+
+        self.l1 = Pin(14, Pin.IN, Pin.PULL_UP)
+        self.r1 = Pin(13, Pin.IN, Pin.PULL_UP)
+
+        self.p1 = Pin(11, Pin.IN, Pin.PULL_UP)
+        self.p2 = Pin(9, Pin.IN, Pin.PULL_UP)
+        self.p3 = Pin(7, Pin.IN, Pin.PULL_UP)
+        self.p4 = Pin(5, Pin.IN, Pin.PULL_UP)
+
+        self.k1 = Pin(12, Pin.IN, Pin.PULL_UP)
+        self.k2 = Pin(10, Pin.IN, Pin.PULL_UP)
+        self.k3 = Pin(8, Pin.IN, Pin.PULL_UP)
+        self.k4 = Pin(6, Pin.IN, Pin.PULL_UP)
+        
 
         self.direction = [0, 0]
 
@@ -140,42 +167,129 @@ class Hitbox:
         if self.h >= 1.0:
             self.h = 0.0
 
-        changed = False
+        direction_changed = False
 
         state = self.keymgr.update("up", self.up.value() == 0)
         if state == KeyState.Press:
-            self.direction[1] = -127
-            changed = True
+            self.gamepad.move_triggers(255, 0)
+            # self.direction[1] = -127
+            # direction_changed = True
         elif state == KeyState.Release:
-            self.direction[1] = 0
-            changed = True
+            
+            self.gamepad.move_triggers(0, 0)
+            # self.direction[1] = 0
+            # direction_changed = True
 
         state = self.keymgr.update("down", self.down.value() == 0)
         if state == KeyState.Press:
             self.direction[1] = 127
-            changed = True
+            direction_changed = True
         elif state == KeyState.Release:
             self.direction[1] = 0
-            changed = True
+            direction_changed = True
 
         state = self.keymgr.update("left", self.left.value() == 0)
         if state == KeyState.Press:
             self.direction[0] = -127
-            changed = True
+            direction_changed = True
         elif state == KeyState.Release:
             self.direction[0] = 0
-            changed = True
+            direction_changed = True
 
         state = self.keymgr.update("right", self.right.value() == 0)
         if state == KeyState.Press:
             self.direction[0] = 127
-            changed = True
+            direction_changed = True
         elif state == KeyState.Release:
             self.direction[0] = 0
-            changed = True
+            direction_changed = True
 
-        if changed:
+        if direction_changed:
             self.gamepad.move_left_stick(*self.direction)
+
+        btn_changed = False
+
+        state = self.keymgr.update("l1", self.l1.value() == 0)
+        if state == KeyState.Press:
+            self.gamepad.press_button(0)
+            btn_changed = True
+        elif state == KeyState.Release:
+            self.gamepad.release_button(0)
+            btn_changed = True
+
+        state = self.keymgr.update("r1", self.r1.value() == 0)
+        if state == KeyState.Press:
+            self.gamepad.press_button(0)
+            btn_changed = True
+        elif state == KeyState.Release:
+            self.gamepad.release_button(0)
+            btn_changed = True
+
+        state = self.keymgr.update("k1", self.k1.value() == 0)
+        if state == KeyState.Press:
+            self.gamepad.press_button(1)
+            btn_changed = True
+        elif state == KeyState.Release:
+            self.gamepad.release_button(1)
+            btn_changed = True
+
+        state = self.keymgr.update("k2", self.k2.value() == 0)
+        if state == KeyState.Press:
+            self.gamepad.press_button(2)
+            btn_changed = True
+        elif state == KeyState.Release:
+            self.gamepad.release_button(2)
+            btn_changed = True
+
+        # state = self.keymgr.update("k3", self.k3.value() == 0)
+        # if state == KeyState.Press:
+        #     self.gamepad.press_button(0)
+        #     btn_changed = True
+        # elif state == KeyState.Release:
+        #     self.gamepad.release_button(0)
+        #     btn_changed = True
+
+        # state = self.keymgr.update("k4", self.k4.value() == 0)
+        # if state == KeyState.Press:
+        #     self.gamepad.press_button(0)
+        #     btn_changed = True
+        # elif state == KeyState.Release:
+        #     self.gamepad.release_button(0)
+        #     btn_changed = True
+
+        state = self.keymgr.update("p1", self.p1.value() == 0)
+        if state == KeyState.Press:
+            self.gamepad.press_button(3)
+            btn_changed = True
+        elif state == KeyState.Release:
+            self.gamepad.release_button(3)
+            btn_changed = True
+
+        state = self.keymgr.update("p2", self.p2.value() == 0)
+        if state == KeyState.Press:
+            self.gamepad.press_button(4)
+            btn_changed = True
+        elif state == KeyState.Release:
+            self.gamepad.release_button(4)
+            btn_changed = True
+
+        state = self.keymgr.update("p3", self.p3.value() == 0)
+        if state == KeyState.Press:
+            self.gamepad.press_button(6)
+            btn_changed = True
+        elif state == KeyState.Release:
+            self.gamepad.release_button(6)
+            btn_changed = True
+
+        # state = self.keymgr.update("p4", self.p4.value() == 0)
+        # if state == KeyState.Press:
+        #     self.gamepad.press_button(0)
+        #     btn_changed = True
+        # elif state == KeyState.Release:
+        #     self.gamepad.release_button(0)
+        #     btn_changed = True
+
+        if direction_changed or btn_changed:
             BoardLED.on(0, 0, 8)
 
         self.oled.show()
